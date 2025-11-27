@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__.'/../includes/auth.php';
-require_once __DIR__.'/../includes/helpers.php';
+require_once __DIR__.'/../models/auth.php';
+require_once __DIR__.'/../models/helpers.php';
 
 $error = null;
 $success = null;
