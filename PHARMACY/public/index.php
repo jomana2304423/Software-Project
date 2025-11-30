@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__.'/../includes/auth.php';
-require_once __DIR__.'/../includes/rbac.php';
-require_once __DIR__.'/../includes/helpers.php';
+require_once __DIR__.'/../models/auth.php';
+require_once __DIR__.'/../models/rbac.php';
+require_once __DIR__.'/../models/helpers.php';
 
 // Redirect to landing page if not logged in
 if (!is_logged_in()) {
