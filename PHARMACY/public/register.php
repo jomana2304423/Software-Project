@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__.'/../includes/auth.php';
-require_once __DIR__.'/../includes/helpers.php';
+require_once __DIR__.'/../models/auth.php';
+require_once __DIR__.'/../models/helpers.php';
 
-$config = require __DIR__.'/../config/config.php';
+$config = require __DIR__.'/../app/config/config.php';
 
 $error = '';
 $success = '';

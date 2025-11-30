@@ -16,16 +16,16 @@ $role = $_SESSION['user']['role'] ?? '';
 // Redirect based on role
 switch ($role) {
     case 'Admin':
-        header('Location: ../modules/dashboard/admin.php');
+        header('Location: ../views/dashboard/admin.php');
         break;
     case 'Pharmacist':
-        header('Location: ../modules/dashboard/pharmacist.php');
+        header('Location: ../views/dashboard/pharmacist.php');
         break;
     case 'Supplier':
-        header('Location: ../modules/dashboard/supplier.php');
+        header('Location: ../views/dashboard/supplier.php');
         break;
     case 'Customer':
-        header('Location: ../modules/dashboard/customer.php');
+        header('Location: ../views/dashboard/customer.php');
         break;
     default:
         header('Location: login.php');

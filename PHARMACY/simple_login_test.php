@@ -1,8 +1,8 @@
 <?php
 session_start();
 require_once 'config/db.php';
-require_once 'includes/auth.php';
-require_once 'includes/helpers.php';
+require_once 'models/auth.php';
+require_once 'models/helpers.php';
 
 $error = '';
 $success = '';
@@ -19,16 +19,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $role = $_SESSION['user']['role'] ?? '';
             switch ($role) {
                 case 'Admin':
-                    header('Location: ../modules/dashboard/admin.php');
+                    header('Location: ../views/dashboard/admin.php');
                     exit;
                 case 'Pharmacist':
-                    header('Location: ../modules/dashboard/pharmacist.php');
+                    header('Location: ../views/dashboard/pharmacist.php');
                     exit;
                 case 'Supplier':
-                    header('Location: ../modules/dashboard/supplier.php');
+                    header('Location: ../views/dashboard/supplier.php');
                     exit;
                 case 'Customer':
-                    header('Location: ../modules/dashboard/customer.php');
+                    header('Location: ../views/dashboard/customer.php');
                     exit;
                 default:
                     header('Location: login.php');

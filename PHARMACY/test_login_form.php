@@ -2,8 +2,8 @@
 // Simple login test page
 session_start();
 require_once 'config/db.php';
-require_once 'includes/auth.php';
-require_once 'includes/helpers.php';
+require_once 'models/auth.php';
+require_once 'models/helpers.php';
 
 $error = '';
 $success = '';
@@ -29,16 +29,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Don't redirect in test, just show what would happen
             switch ($role) {
                 case 'Admin':
-                    echo "Would redirect to: ../modules/dashboard/admin.php<br>";
+                    echo "Would redirect to: ../views/dashboard/admin.php<br>";
                     break;
                 case 'Pharmacist':
-                    echo "Would redirect to: ../modules/dashboard/pharmacist.php<br>";
+                    echo "Would redirect to: ../views/dashboard/pharmacist.php<br>";
                     break;
                 case 'Supplier':
-                    echo "Would redirect to: ../modules/dashboard/supplier.php<br>";
+                    echo "Would redirect to: ../views/dashboard/supplier.php<br>";
                     break;
                 case 'Customer':
-                    echo "Would redirect to: ../modules/dashboard/customer.php<br>";
+                    echo "Would redirect to: ../views/dashboard/customer.php<br>";
                     break;
                 default:
                     echo "Would redirect to: login.php (unknown role)<br>";

@@ -5,8 +5,8 @@ session_start();
 echo "<h1>Login Flow Test</h1>";
 
 if (isset($_POST['test_login'])) {
-    require_once 'includes/auth.php';
-    require_once 'includes/helpers.php';
+    require_once 'models/auth.php';
+    require_once 'models/helpers.php';
     
     $username = 'admin';
     $password = 'admin123';
@@ -20,16 +20,16 @@ if (isset($_POST['test_login'])) {
         $role = $_SESSION['user']['role'];
         switch ($role) {
             case 'Admin':
-                $redirect_url = '../modules/dashboard/admin.php';
+                $redirect_url = '../views/dashboard/admin.php';
                 break;
             case 'Pharmacist':
-                $redirect_url = '../modules/dashboard/pharmacist.php';
+                $redirect_url = '../views/dashboard/pharmacist.php';
                 break;
             case 'Supplier':
-                $redirect_url = '../modules/dashboard/supplier.php';
+                $redirect_url = '../views/dashboard/supplier.php';
                 break;
             case 'Customer':
-                $redirect_url = '../modules/dashboard/customer.php';
+                $redirect_url = '../views/dashboard/customer.php';
                 break;
             default:
                 $redirect_url = 'login.php';
@@ -39,7 +39,7 @@ if (isset($_POST['test_login'])) {
         echo "<p><strong>Full URL:</strong> http://localhost/pharmacy/modules/dashboard/" . strtolower($role) . ".php</p>";
         
         echo "<p><a href='public/index.php' class='btn btn-success'>Go to Dashboard (via index.php)</a></p>";
-        echo "<p><a href='modules/dashboard/" . strtolower($role) . ".php' class='btn btn-primary'>Go Directly to Dashboard</a></p>";
+        echo "<p><a href='views/dashboard/" . strtolower($role) . ".php' class='btn btn-primary'>Go Directly to Dashboard</a></p>";
     } else {
         echo "<p style='color: red;'>✗ Login failed</p>";
     }

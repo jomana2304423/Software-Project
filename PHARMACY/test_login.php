@@ -5,8 +5,8 @@ session_start();
 echo "<h1>Login Test</h1>";
 
 if (isset($_POST['test_login'])) {
-    require_once 'includes/auth.php';
-    require_once 'includes/helpers.php';
+    require_once 'models/auth.php';
+    require_once 'models/helpers.php';
     
     $username = 'admin';
     $password = 'admin123';

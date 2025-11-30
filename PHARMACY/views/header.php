@@ -6,7 +6,7 @@
     <title><?php echo isset($page_title) ? $page_title . ' - ' : ''; ?>Pharmacy Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="assets/css/styles.css" rel="stylesheet">
+    <link href="public/assets/css/styles.css" rel="stylesheet">
 </head>
 <body>
     <?php if (is_logged_in()): ?>
@@ -28,7 +28,7 @@
                     
                     <?php if (can_process_sales()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../modules/sales/cart.php">
+                        <a class="nav-link" href="../views/sales/cart.php">
                             <i class="bi bi-cart"></i> Sales
                         </a>
                     </li>
@@ -36,7 +36,7 @@
                     
                     <?php if (is_admin() || is_pharmacist()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../modules/medicines/list.php">
+                        <a class="nav-link" href="../views/medicines/list.php">
                             <i class="bi bi-capsule"></i> Medicines
                         </a>
                     </li>
@@ -44,7 +44,7 @@
                     
                     <?php if (can_manage_suppliers()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../modules/suppliers/list.php">
+                        <a class="nav-link" href="../views/suppliers/list.php">
                             <i class="bi bi-truck"></i> Suppliers
                         </a>
                     </li>
@@ -52,12 +52,12 @@
                     
                     <?php if (is_supplier()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../modules/suppliers/products.php">
+                        <a class="nav-link" href="../views/suppliers/products.php">
                             <i class="bi bi-box"></i> My Products
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../modules/suppliers/orders.php">
+                        <a class="nav-link" href="../views/suppliers/orders.php">
                             <i class="bi bi-list-check"></i> Orders
                         </a>
                     </li>
@@ -65,17 +65,17 @@
                     
                     <?php if (is_customer()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../modules/customers/medicines.php">
+                        <a class="nav-link" href="../views/customers/medicines.php">
                             <i class="bi bi-capsule"></i> Medicine Catalog
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../modules/prescriptions/upload.php">
+                        <a class="nav-link" href="../views/prescriptions/upload.php">
                             <i class="bi bi-cloud-upload"></i> Upload Prescription
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../modules/prescriptions/view.php">
+                        <a class="nav-link" href="../views/prescriptions/view.php">
                             <i class="bi bi-file-medical"></i> My Prescriptions
                         </a>
                     </li>
@@ -83,7 +83,7 @@
                     
                     <?php if (can_view_reports()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../modules/reports/index.php">
+                        <a class="nav-link" href="../views/reports/index.php">
                             <i class="bi bi-graph-up"></i> Reports
                         </a>
                     </li>
@@ -91,7 +91,7 @@
                     
                     <?php if (can_manage_users()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../modules/users/list.php">
+                        <a class="nav-link" href="../views/users/list.php">
                             <i class="bi bi-people"></i> Users
                         </a>
                     </li>

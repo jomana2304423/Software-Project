@@ -1,12 +1,12 @@
 <?php
-require_once __DIR__.'/../../includes/auth.php';
-require_once __DIR__.'/../../includes/rbac.php';
-require_once __DIR__.'/../../includes/helpers.php';
+require_once __DIR__.'/../../models/auth.php';
+require_once __DIR__.'/../../models/rbac.php';
+require_once __DIR__.'/../../models/helpers.php';
 
 require_login();
 require_role('Supplier');
 
-$config = require __DIR__.'/../../config/config.php';
+$config = require __DIR__.'/../../app/config/config.php';
 
 // Get supplier-specific statistics
 $pending_orders = get_supplier_pending_orders_count();
@@ -14,7 +14,7 @@ $completed_orders = get_supplier_completed_orders_count();
 $total_products = get_supplier_products_count();
 
 $page_title = 'Supplier Dashboard';
-include '../../includes/header.php';
+include '../../views/header.php';
 ?>
 
 <div class="container-fluid">
@@ -188,5 +188,5 @@ include '../../includes/header.php';
     </div>
 </div>
 
-<?php include '../../includes/footer.php'; ?>
+<?php include '../../views/footer.php'; ?>
 

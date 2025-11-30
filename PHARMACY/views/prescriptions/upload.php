@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__.'/../../includes/auth.php';
-require_once __DIR__.'/../../includes/rbac.php';
-require_once __DIR__.'/../../includes/helpers.php';
+require_once __DIR__.'/../../models/auth.php';
+require_once __DIR__.'/../../models/rbac.php';
+require_once __DIR__.'/../../models/helpers.php';
 
 require_login();
 require_role(['Admin', 'Pharmacist']);
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $page_title = 'Upload Prescription';
-include '../../includes/header.php';
+include '../../views/header.php';
 ?>
 
 <div class="container-fluid">
@@ -185,4 +185,4 @@ document.querySelector('input[name="prescription_file"]').addEventListener('chan
 });
 </script>
 
-<?php include '../../includes/footer.php'; ?>
+<?php include '../../views/footer.php'; ?>

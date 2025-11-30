@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$config = require __DIR__.'/../config/config.php';
+$config = require __DIR__.'/../app/config/config.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -31,10 +31,10 @@ if (!empty($_SESSION['user'])) {
     
     echo "<h2>Dashboard Links:</h2>";
     echo "<ul>";
-    echo "<li><a href='modules/dashboard/admin.php'>Admin Dashboard</a></li>";
-    echo "<li><a href='modules/dashboard/pharmacist.php'>Pharmacist Dashboard</a></li>";
-    echo "<li><a href='modules/dashboard/supplier.php'>Supplier Dashboard</a></li>";
-    echo "<li><a href='modules/dashboard/customer.php'>Customer Dashboard</a></li>";
+    echo "<li><a href='views/dashboard/admin.php'>Admin Dashboard</a></li>";
+    echo "<li><a href='views/dashboard/pharmacist.php'>Pharmacist Dashboard</a></li>";
+    echo "<li><a href='views/dashboard/supplier.php'>Supplier Dashboard</a></li>";
+    echo "<li><a href='views/dashboard/customer.php'>Customer Dashboard</a></li>";
     echo "</ul>";
     
     echo "<p><a href='logout.php'>Logout</a></p>";
