@@ -89,7 +89,7 @@ try {
 }
 
 $page_title = 'My Profile';
-include '../../includes/header.php';
+include '../../views/header.php';
 ?>
 
 <div class="container-fluid">
@@ -222,7 +222,7 @@ include '../../includes/header.php';
     </div>
 </div>
 
-<?php include '../../includes/footer.php'; ?>
+<?php include '../../views/footer.php'; ?>
 
 
 

@@ -93,7 +93,7 @@ try {
 }
 
 $page_title = 'Medicine Catalog';
-include '../../includes/header.php';
+include '../../views/header.php';
 ?>
 
 <div class="container-fluid">
@@ -420,6 +420,6 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
 
-<?php include '../../includes/footer.php'; ?>
+<?php include '../../views/footer.php'; ?>
 
 

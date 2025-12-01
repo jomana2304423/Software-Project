@@ -27,7 +27,7 @@ try {
 }
 
 $page_title = 'My Orders';
-include '../../includes/header.php';
+include '../../views/header.php';
 ?>
 
 <div class="container-fluid">
@@ -138,7 +138,7 @@ function viewOrder(orderId) {
 }
 </script>
 
-<?php include '../../includes/footer.php'; ?>
+<?php include '../../views/footer.php'; ?>
 
 
 
