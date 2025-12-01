@@ -28,7 +28,7 @@ switch ($role) {
         header('Location: ../views/dashboard/customer.php');
         break;
     default:
-       // header('Location: landing.php');
+        header('Location: landing.php');
         break;
 }
 exit;
