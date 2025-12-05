@@ -1,6 +1,5 @@
 <?php
-session_start();
-
+// session_start(); // Removed redundant session_start()
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,5 +35,10 @@ session_start();
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        
+        localStorage.removeItem('dummyCart');
+        
+    </script>
 </body>
 </html>

@@ -1,4 +1,5 @@
 <?php
+ob_start(); // Start output buffering to prevent "headers already sent" errors
 require_once __DIR__.'/../models/auth.php';
 require_once __DIR__.'/../models/rbac.php';
 require_once __DIR__.'/../models/helpers.php';

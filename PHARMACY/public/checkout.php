@@ -1,5 +1,19 @@
 <?php
-session_start();
+// session_start(); // Removed redundant session_start()
+
+$cartData = $_GET['cartData'] ?? '';
+$cartItems = [];
+$overallTotal = 0;
+
+if (!empty($cartData)) {
+    $decodedCart = json_decode(urldecode($cartData), true);
+    if (json_last_error() === JSON_ERROR_NONE) {
+        $cartItems = $decodedCart;
+        foreach ($cartItems as $item) {
+            $overallTotal += ($item['price'] * $item['quantity']);
+        }
+    }
+}
 
 ?>
 <!DOCTYPE html>
@@ -24,16 +38,26 @@ session_start();
                                 <h2 class="mt-3 mb-1">Order Summary</h2>
                             </div>
                             <div class="order-details">
-                                <p><strong>Item:</strong> Dummy Medicine A</p>
-                                <p><strong>Quantity:</strong> 2</p>
-                                <p><strong>Price:</strong> $15.00</p>
-                                <p><strong>Total:</strong> $30.00</p>
+                                <?php if (empty($cartItems)): ?>
+                                    <p>Your cart is empty.</p>
+                                <?php else: ?>
+                                    <?php foreach ($cartItems as $item): ?>
+                                        <p>
+                                            <strong>Item:</strong> <?php echo htmlspecialchars($item['name']); ?><br>
+                                            <strong>Quantity:</strong> <?php echo htmlspecialchars($item['quantity']); ?><br>
+                                            <strong>Price:</strong> ₹<?php echo number_format($item['price'], 2); ?>
+                                        </p>
+                                        <hr>
+                                    <?php endforeach; ?>
+                                    <p class="fs-4"><strong>Total:</strong> ₹<?php echo number_format($overallTotal, 2); ?></p>
+                                <?php endif; ?>
                             </div>
                             <form action="payment.php" method="GET">
+                                <input type="hidden" name="cartData" value="<?php echo htmlspecialchars($cartData); ?>">
                                 <button type="submit" class="btn btn-primary w-100 mb-3">Proceed to Payment</button>
                             </form>
                             <div class="text-center">
-                                <p class="mb-0"><a href="index.php" class="text-decoration-none">Continue Shopping</a></p>
+                                <p class="mb-0"><a href="../views/customers/medicines.php" class="text-decoration-none">Continue Shopping</a></p>
                             </div>
                         </div>
                     </div>

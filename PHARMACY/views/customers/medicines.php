@@ -246,8 +246,10 @@ include '../../views/header.php';
                                             onclick="viewMedicineDetails(<?php echo $medicine['id']; ?>)">
                                         <i class="bi bi-eye"></i> View Details
                                     </button>
-                                    <button type="button" class="btn btn-success btn-sm" 
-                                            onclick="addToCart(<?php echo $medicine['id']; ?>)">
+                                    <button type="button" class="btn btn-success btn-sm add-to-cart-btn" 
+                                            data-medicine-id="<?php echo $medicine['id']; ?>"
+                                            data-medicine-name="<?php echo htmlspecialchars($medicine['name']); ?>"
+                                            data-medicine-price="<?php echo htmlspecialchars($medicine['min_price']); ?>">
                                         <i class="bi bi-cart-plus"></i> Add to Cart
                                     </button>
                                 </div>
@@ -317,6 +319,15 @@ include '../../views/header.php';
                 </div>
             </div>
         <?php endif; ?>
+        
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <a href="cart.php" class="btn btn-lg btn-warning position-relative">
+                    <i class="bi bi-cart-fill"></i> View Cart 
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
     <?php endif; ?>
 </div>
 
@@ -360,6 +371,8 @@ function viewMedicineDetails(medicineId) {
         .then(response => response.text())
         .then(html => {
             document.getElementById('medicineDetails').innerHTML = html;
+            // Attach event listener to the "Add to Cart" button in the modal footer
+            document.getElementById('addToCartBtn').onclick = () => addToCart(currentMedicineId, document.getElementById('medicineQuantity').value);
         })
         .catch(error => {
             document.getElementById('medicineDetails').innerHTML = 
@@ -367,19 +380,71 @@ function viewMedicineDetails(medicineId) {
         });
 }
 
-function addToCart(medicineId) {
-    // For now, just show an alert
-    // In a real implementation, this would add to a shopping cart
-    showAlert('Medicine added to cart! (Feature coming soon)', 'success');
+// Client-side dummy cart functionality
+let cart = JSON.parse(localStorage.getItem('dummyCart')) || {};
+
+function updateCartCount() {
+    let count = 0;
+    for (const medicineId in cart) {
+        count += cart[medicineId].quantity;
+    }
+    document.getElementById('cart-count').textContent = count;
 }
 
-// Initialize tooltips
+function addToCart(medicineId, name, price, quantity = 1) {
+    quantity = parseInt(quantity);
+    if (cart[medicineId]) {
+        cart[medicineId].quantity += quantity;
+    } else {
+        cart[medicineId] = { id: medicineId, quantity: quantity, name: name, price: parseFloat(price) }; 
+    }
+    localStorage.setItem('dummyCart', JSON.stringify(cart));
+    updateCartCount();
+    showAlert(`Added ${quantity} of ${name} to cart!`, 'success');
+}
+
+function addToCartFromModal(medicineId, quantity) {
+    // Need to get name and price from the modal's loaded content for a real implementation
+    // For this dummy implementation, we'll fetch from the global medicines data or pass it
+    const medicineName = document.querySelector('#medicineDetails h4').textContent;
+    const medicinePriceText = document.querySelector('#medicineDetails .text-success').textContent;
+    const medicinePrice = parseFloat(medicinePriceText.replace('₹', '')); // Assuming currency symbol
+    addToCart(medicineId, medicineName, medicinePrice, quantity);
+    bootstrap.Modal.getInstance(document.getElementById('medicineModal')).hide();
+}
+
+// Event listeners for Add to Cart buttons on the main page
 document.addEventListener('DOMContentLoaded', function() {
+    updateCartCount();
+    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const medicineId = this.dataset.medicineId;
+            const medicineName = this.dataset.medicineName;
+            const medicinePrice = this.dataset.medicinePrice;
+            addToCart(medicineId, medicineName, medicinePrice);
+        });
+    });
+    
+    // Initialize tooltips
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function(tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 });
+
+// Simple alert function
+function showAlert(message, type) {
+    const alertContainer = document.querySelector('.container-fluid'); // Adjust this selector if needed
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show mt-3`;
+    alertDiv.role = 'alert';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    alertContainer.prepend(alertDiv);
+    setTimeout(() => alertDiv.remove(), 5000);
+}
 </script>
 
 <style>
