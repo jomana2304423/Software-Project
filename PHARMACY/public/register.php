@@ -129,9 +129,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="mb-3">
                                 <label for="role" class="form-label">Account Type</label>
                                 <select class="form-select" id="role" name="role" required>
-                                    <option value="">Select account type</option>
-                                    <option value="Customer" <?php echo (($_POST['role'] ?? '') === 'Customer') ? 'selected' : ''; ?>>Customer</option>
-                                    <option value="Supplier" <?php echo (($_POST['role'] ?? '') === 'Supplier') ? 'selected' : ''; ?>>Supplier</option>
+                                   <option value="">Select account type</option>
+                                   <option value="Customer" <?php echo (($_POST['role'] ?? '') === 'Customer') ? 'selected' : ''; ?>>Customer</option>
+                                   <option value="Supplier" <?php echo (($_POST['role'] ?? '') === 'Supplier') ? 'selected' : ''; ?>>Supplier</option>
+                                   <option value="Admin" <?php echo (($_POST['role'] ?? '') === 'Admin') ? 'selected' : ''; ?>>Admin</option>
+
                                 </select>
                             </div>
                             
