@@ -29,6 +29,7 @@ body {
     line-height: 1.6;
     color: var(--dark-color);
     min-height: 100vh;
+    /* Removed flexbox centering, will be handled by .register-container */
 }
 
 /* Enhanced Navbar */
@@ -61,10 +62,10 @@ body {
 .card {
     border: none;
     border-radius: 16px;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); /* More pronounced shadow from register.php */
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px); /* Frosted glass effect */
     overflow: hidden;
 }
 
@@ -547,6 +548,31 @@ body {
 .border-gradient {
     border: 2px solid;
     border-image: var(--gradient-primary) 1;
+}
+
+/* General Container Styling */
+.container {
+    max-width: 960px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* Order and Confirmation Details */
+.order-details, .confirmation-message {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.order-details p, .confirmation-message p {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.order-details strong {
+    color: var(--primary-color);
 }
 
 /* Animation Classes */
