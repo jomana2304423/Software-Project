@@ -1,4 +1,4 @@
 <?php
-header("Location: public/login.php");
+header("Location: public/landing.php");
 exit;
 ?>
