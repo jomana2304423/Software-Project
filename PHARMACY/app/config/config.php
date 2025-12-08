@@ -4,7 +4,7 @@ return [
     'db_name' => 'pms_db',
     'db_user' => 'root',
     'db_pass' => '',
-    'base_url' => '/pharmacy/public',
+    'base_url' => '/Software-Project/PHARMACY/public',
     'session_timeout_minutes' => 30,
     'app_name' => 'Pharmacy Management System',
     'version' => '1.0.0'

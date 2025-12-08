@@ -1,188 +1,154 @@
 <?php
-require_once __DIR__.'/../../models/auth.php';
-require_once __DIR__.'/../../models/rbac.php';
-require_once __DIR__.'/../../models/helpers.php';
+require_once __DIR__ . '/../../models/auth.php';
+require_once __DIR__ . '/../../models/rbac.php';
+require_once __DIR__ . '/../../app/config/config.php';
 
 require_login();
-require_role(['Admin', 'Pharmacist']);
+require_role('Customer');
 
-// Handle prescription upload
+$pharmacy_base_url = str_replace('/public', '', $config['base_url']);
+error_log("DEBUG: Upload Page - $pharmacy_base_url: " . $pharmacy_base_url);
+
+$uploadMessage = '';
+$analysisResult = '';
+$uploadedFileName = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['action']) && $_POST['action'] === 'upload_prescription') {
-        $customer_name = sanitize_input($_POST['customer_name']);
-        $customer_phone = sanitize_input($_POST['customer_phone']);
-        $customer_email = sanitize_input($_POST['customer_email']);
-        
-        // Validate required fields
-        if (empty($customer_name) || empty($customer_phone)) {
-            $error = 'Customer name and phone are required.';
-        } elseif (!isset($_FILES['prescription_file']) || $_FILES['prescription_file']['error'] !== UPLOAD_ERR_OK) {
-            $error = 'Please select a valid prescription file.';
-        } else {
-            $file = $_FILES['prescription_file'];
-            
-            // Validate file type
-            $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
-            if (!in_array($file['type'], $allowed_types)) {
-                $error = 'Only JPEG, PNG, GIF, and PDF files are allowed.';
-            } elseif ($file['size'] > 5 * 1024 * 1024) { // 5MB limit
-                $error = 'File size must be less than 5MB.';
+    if (isset($_FILES['prescriptionFile'])) {
+        $targetDir = __DIR__ . '/../../uploads/prescriptions/';
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
+
+        $fileName = basename($_FILES['prescriptionFile']['name']);
+        $targetFilePath = $targetDir . $fileName;
+        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+
+        // Allow certain file formats
+        $allowTypes = array('jpg', 'png', 'jpeg', 'pdf');
+        if (in_array($fileType, $allowTypes)) {
+            // Upload file to server
+            if (move_uploaded_file($_FILES['prescriptionFile']['tmp_name'], $targetFilePath)) {
+                $uploadMessage = "The file ". htmlspecialchars($fileName). " has been uploaded successfully.";
+                $uploadedFileName = $fileName;
+                
+                // Placeholder for prescription analysis
+                // Simulate analysis result - this is where real OCR would go
+                $analysisResult = "[Placeholder Analysis for {$fileName}: Paracetamol 500mg (x2), Amoxicillin 250mg (x1)]";
+
             } else {
-                try {
-                    // Create customer if not exists
-                    $stmt = $pdo->prepare("SELECT id FROM customers WHERE phone = ?");
-                    $stmt->execute([$customer_phone]);
-                    $customer = $stmt->fetch();
-                    
-                    if (!$customer) {
-                        $stmt = $pdo->prepare("INSERT INTO customers (name, phone, email) VALUES (?, ?, ?)");
-                        $stmt->execute([$customer_name, $customer_phone, $customer_email]);
-                        $customer_id = $pdo->lastInsertId();
-                    } else {
-                        $customer_id = $customer['id'];
-                    }
-                    
-                    // Create upload directory if not exists
-                    $upload_dir = __DIR__ . '/../../storage/prescriptions/';
-                    if (!is_dir($upload_dir)) {
-                        mkdir($upload_dir, 0755, true);
-                    }
-                    
-                    // Generate unique filename
-                    $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-                    $filename = 'prescription_' . $customer_id . '_' . time() . '.' . $file_extension;
-                    $file_path = $upload_dir . $filename;
-                    
-                    // Move uploaded file
-                    if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                        // Save prescription record
-                        $stmt = $pdo->prepare("INSERT INTO prescriptions (customer_id, file_path, status) VALUES (?, ?, 'Pending')");
-                        $stmt->execute([$customer_id, $filename]);
-                        
-                        log_activity($_SESSION['user']['id'], 'Upload Prescription', "Uploaded prescription for customer: $customer_name");
-                        header('Location: review.php?success=Prescription uploaded successfully');
-                        exit;
-                    } else {
-                        $error = 'Failed to upload file.';
-                    }
-                } catch (PDOException $e) {
-                    $error = 'Failed to save prescription: ' . $e->getMessage();
-                }
+                $uploadMessage = "Error uploading your file.";
             }
+        } else {
+            $uploadMessage = "Sorry, only JPG, JPEG, PNG, & PDF files are allowed to upload.";
+        }
+    } else if (isset($_POST['confirmCorrect']) && $_POST['confirmCorrect'] === 'yes' && isset($_POST['analysisResultText'])) {
+        // User confirmed analysis, now add to cart
+        $confirmedAnalysisText = $_POST['analysisResultText'];
+        $prescriptionItems = [];
+
+        // Simulate parsing the analysis text into cart-compatible items
+        // In a real scenario, this would come from the actual OCR output
+        if (strpos($confirmedAnalysisText, 'Paracetamol') !== false) {
+            $prescriptionItems[] = ['id' => 'presc_1', 'name' => 'Paracetamol 500mg', 'price' => 5.00, 'quantity' => 2];
+        }
+        if (strpos($confirmedAnalysisText, 'Amoxicillin') !== false) {
+            $prescriptionItems[] = ['id' => 'presc_2', 'name' => 'Amoxicillin 250mg', 'price' => 12.50, 'quantity' => 1];
+        }
+
+        if (!empty($prescriptionItems)) {
+            // Prepare items for localStorage
+            $cartUpdate = [];
+            foreach ($prescriptionItems as $item) {
+                $cartUpdate[$item['id']] = $item;
+            }
+            $cartDataJson = json_encode($cartUpdate);
+
+            // Use JavaScript to update localStorage and redirect
+            echo '<script type="text/javascript">';
+            echo '    let currentCart = JSON.parse(localStorage.getItem(\'dummyCart\') || \'{}\');';
+            echo '    let newItems = ' . $cartDataJson . ';';
+            echo '    for (let itemId in newItems) {';
+            echo '        if (currentCart[itemId]) {';
+            echo '            currentCart[itemId].quantity += newItems[itemId].quantity;';
+            echo '        } else {';
+            echo '            currentCart[itemId] = newItems[itemId];';
+            echo '        }';
+            echo '    }';
+            echo '    localStorage.setItem(\'dummyCart\', JSON.stringify(currentCart));';
+            echo '    window.location.href = \'' . $pharmacy_base_url . '/views/customers/cart.php\';';
+            echo '</script>';
+            exit();
         }
     }
 }
-
-$page_title = 'Upload Prescription';
-include '../../views/header.php';
 ?>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="review.php">Prescriptions</a></li>
-                    <li class="breadcrumb-item active">Upload Prescription</li>
-                </ol>
-            </nav>
-            
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2><i class="bi bi-cloud-upload"></i> Upload Prescription</h2>
-                <a href="review.php" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left"></i> Back to Review
-                </a>
-            </div>
-        </div>
-    </div>
-    
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-file-medical"></i> Prescription Upload Form</h5>
-                </div>
-                <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-                        <input type="hidden" name="action" value="upload_prescription">
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Customer Name *</label>
-                                    <input type="text" name="customer_name" class="form-control" required>
-                                    <div class="invalid-feedback">Please enter customer name.</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Prescription</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo $pharmacy_base_url; ?>/public/assets/css/styles.css">
+</head>
+<body>
+    <?php include __DIR__ . '/../header.php'; // Adjust path as necessary ?>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Upload Prescription</h2>
+                    </div>
+                    <div class="card-body">
+                        <?php if (!empty($uploadMessage)): ?>
+                            <div class="alert alert-info" role="alert">
+                                <?php echo $uploadMessage; ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <form action="upload.php" method="POST" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="prescriptionFile" class="form-label">Select Prescription Image/PDF</label>
+                                <input class="form-control" type="file" id="prescriptionFile" name="prescriptionFile" accept=".jpg,.jpeg,.png,.pdf" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">Notes (Optional)</label>
+                                <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </form>
+
+                        <?php if (!empty($analysisResult)): ?>
+                            <hr>
+                            <h3>Analysis Result</h3>
+                            <div class="alert alert-secondary">
+                                <p><?php echo htmlspecialchars($analysisResult); ?></p>
+                            </div>
+                            <form action="<?php echo $pharmacy_base_url; ?>/views/prescriptions/upload.php" method="POST">
+                                <!-- Debug: Form action URL is <?php echo htmlspecialchars($pharmacy_base_url); ?>/views/prescriptions/upload.php -->
+                                <input type="hidden" name="analysisResultText" value="<?php echo htmlspecialchars($analysisResult); ?>">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="confirmCorrect" name="confirmCorrect" value="yes" required>
+                                    <label class="form-check-label" for="confirmCorrect">
+                                        I confirm the analyzed information is correct.
+                                    </label>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Phone Number *</label>
-                                    <input type="tel" name="customer_phone" class="form-control" required>
-                                    <div class="invalid-feedback">Please enter phone number.</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Email Address</label>
-                            <input type="email" name="customer_email" class="form-control">
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Prescription File *</label>
-                            <input type="file" name="prescription_file" class="form-control" 
-                                   accept="image/*,.pdf" required>
-                            <div class="form-text">
-                                Supported formats: JPEG, PNG, GIF, PDF (Max size: 5MB)
-                            </div>
-                            <div class="invalid-feedback">Please select a prescription file.</div>
-                        </div>
-                        
-                        <div class="alert alert-info">
-                            <h6><i class="bi bi-info-circle"></i> Upload Guidelines</h6>
-                            <ul class="mb-0">
-                                <li>Ensure the prescription is clearly visible and readable</li>
-                                <li>File should be in good quality (not blurry or dark)</li>
-                                <li>Include all pages if the prescription is multi-page</li>
-                                <li>Only upload prescriptions from licensed doctors</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-cloud-upload"></i> Upload Prescription
-                            </button>
-                        </div>
-                    </form>
+                                <button type="submit" class="btn btn-success">Confirm Analysis and Add to Cart</button>
+                            </form>
+                        <?php endif; ?>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-// File size validation
-document.querySelector('input[name="prescription_file"]').addEventListener('change', function() {
-    const file = this.files[0];
-    if (file && file.size > 5 * 1024 * 1024) {
-        this.setCustomValidity('File size must be less than 5MB');
-    } else {
-        this.setCustomValidity('');
-    }
-});
-
-// Preview uploaded file
-document.querySelector('input[name="prescription_file"]').addEventListener('change', function() {
-    const file = this.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            // You can add image preview here if needed
-            console.log('File selected:', file.name, 'Size:', file.size);
-        };
-        reader.readAsDataURL(file);
-    }
-});
-</script>
-
-<?php include '../../views/footer.php'; ?>
+    <?php include __DIR__ . '/../footer.php'; // Adjust path as necessary ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

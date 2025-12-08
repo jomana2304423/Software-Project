@@ -1,9 +1,11 @@
 <?php
-echo "<!-- DEBUG: Loading auth.php -->"; // Temporary debug output
+
 require_once __DIR__.'/../app/config/db.php';
 require_once __DIR__.'/../app/config/config.php';
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 function login($username, $password) {
     global $pdo;

@@ -38,16 +38,19 @@ body {
     backdrop-filter: blur(10px);
     box-shadow: var(--shadow-md);
     border: none;
+    padding-top: 0.5rem; /* Smaller padding */
+    padding-bottom: 0.5rem; /* Smaller padding */
 }
 
 .navbar-brand {
     font-weight: 700;
-    font-size: 1.75rem;
+    font-size: 1.5rem; /* Slightly smaller font size */
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-nav .nav-link {
     font-weight: 500;
+    font-size: 0.95rem; /* Slightly smaller font size */
     transition: all 0.3s ease;
     border-radius: 6px;
     margin: 0 2px;
