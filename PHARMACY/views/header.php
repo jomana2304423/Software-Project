@@ -28,7 +28,7 @@
                     
                     <?php if (can_process_sales()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../views/sales/cart.php">
+                        <a class="nav-link" href="../sales/cart.php">
                             <i class="bi bi-cart"></i> Sales
                         </a>
                     </li>
@@ -36,7 +36,7 @@
                     
                     <?php if (is_admin() || is_pharmacist()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../views/medicines/list.php">
+                        <a class="nav-link" href="../medicines/list.php">
                             <i class="bi bi-capsule"></i> Medicines
                         </a>
                     </li>
@@ -44,7 +44,7 @@
                     
                     <?php if (can_manage_suppliers()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../views/suppliers/list.php">
+                        <a class="nav-link" href="../suppliers/list.php">
                             <i class="bi bi-truck"></i> Suppliers
                         </a>
                     </li>
@@ -52,12 +52,12 @@
                     
                     <?php if (is_supplier()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../views/suppliers/products.php">
+                        <a class="nav-link" href="../suppliers/products.php">
                             <i class="bi bi-box"></i> My Products
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../views/suppliers/orders.php">
+                        <a class="nav-link" href="../suppliers/orders.php">
                             <i class="bi bi-list-check"></i> Orders
                         </a>
                     </li>
@@ -65,17 +65,17 @@
                     
                     <?php if (is_customer()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../views/customers/medicines.php">
+                        <a class="nav-link" href="../customers/medicines.php">
                             <i class="bi bi-capsule"></i> Medicine Catalog
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../views/prescriptions/upload.php">
+                        <a class="nav-link" href="../prescriptions/upload.php">
                             <i class="bi bi-cloud-upload"></i> Upload Prescription
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../views/prescriptions/view.php">
+                        <a class="nav-link" href="../prescriptions/view.php">
                             <i class="bi bi-file-medical"></i> My Prescriptions
                         </a>
                     </li>
@@ -83,7 +83,7 @@
                     
                     <?php if (can_view_reports()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../views/reports/index.php">
+                        <a class="nav-link" href="../reports/index.php">
                             <i class="bi bi-graph-up"></i> Reports
                         </a>
                     </li>
@@ -91,7 +91,7 @@
                     
                     <?php if (can_manage_users()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../views/users/list.php">
+                        <a class="nav-link" href="../users/list.php">
                             <i class="bi bi-people"></i> Users
                         </a>
                     </li>
