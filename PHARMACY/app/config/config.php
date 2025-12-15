@@ -1,7 +1,7 @@
 <?php
 return [
     'db_host' => '127.0.0.1',
-    'db_name' => 'pms_db',
+    'db_name' => 'db',
     'db_user' => 'root',
     'db_pass' => '',
     'base_url' => '/Software-Project/PHARMACY/public',
